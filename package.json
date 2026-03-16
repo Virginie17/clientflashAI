@@ -10,14 +10,18 @@
     "check-env": "node scripts/check-env.js",
     "setup": "node scripts/setup-env.js",
     "find-key": "node scripts/find-supabase-key.js",
-    "create-table": "node scripts/create-table.js"
+    "create-table": "node scripts/create-table.js",
+    "create-business-tables": "node scripts/create-business-tables.js",
+    "test-stripe": "node scripts/test-stripe.js",
+    "backup-database": "node scripts/backup-database.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.1",
     "dotenv": "^17.3.1",
     "next": "16.1.6",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "stripe": "^20.4.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

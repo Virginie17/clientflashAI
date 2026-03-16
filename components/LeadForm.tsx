@@ -10,8 +10,9 @@ export default function LeadForm() {
     city: '',
     instagram_or_website: ''
   })
+
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -32,22 +33,34 @@ export default function LeadForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       })
 
+      const data = await response.json()
+
       if (!response.ok) {
-        throw new Error('Failed to submit form')
+        throw new Error(data.error || 'Erreur lors de la soumission')
       }
 
-      setIsSubmitted(true)
+      console.log('Lead enregistré:', data)
+      setSuccess(true)
+      setFormData({
+        name: '',
+        email: '',
+        business_type: '',
+        city: '',
+        instagram_or_website: ''
+      })
+
     } catch (err) {
-      setError('Something went wrong. Please try again.')
+      console.error('Erreur:', err)
+      setError(err instanceof Error ? err.message : 'Erreur technique. Veuillez réessayer plus tard.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  if (isSubmitted) {
+  if (success) {
     return (
       <div className="max-w-xl mx-auto p-8 bg-green-50 border border-green-200 rounded-xl">
         <div className="text-center">
@@ -55,29 +68,6 @@ export default function LeadForm() {
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
-          </div>
-          <h3 className="text-2xl font-bold text-green-800 mb-4">
-            Super ! Votre demande a été enregistrée
-          </h3>
-          <p className="text-green-700 mb-6">
-            Nous avons reçu votre commande et vous contacterons dans les 24 heures pour commencer.
-          </p>
-          <div className="bg-white rounded-lg p-6 mb-6">
-            <h3 className="font-semibold text-gray-900 mb-3">Prochaines étapes :</h3>
-            <ul className="text-left space-y-2 text-gray-700">
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Nous allons examiner vos informations et vous contacter pour une brève consultation</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Votre page d'atterrissage sera prête dans 72 heures</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="text-blue-600 mt-1">•</span>
-                <span>Vous recevrez tous les matériaux marketing et publications sur les réseaux sociaux</span>
-              </li>
-            </ul>
           </div>
           <h3 className="text-2xl font-bold text-green-800 mb-4">
             Super ! Votre demande a été enregistrée
@@ -114,7 +104,7 @@ export default function LeadForm() {
   }
 
   return (
-    <div className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-lg">
+    <div id="contact" className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow-lg">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-900 mb-4">
           Obtenez votre page professionnelle en 72h
@@ -218,30 +208,12 @@ export default function LeadForm() {
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
-      </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-      >
-        {isSubmitting ? (
-          <>
-            <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-            </svg>
-            <span>Traitement en cours...</span>
-          </>
-        ) : (
-          <>
-            Recevoir mon pack
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L10.586 11.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-          </>
-        )}
-      </button>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-blue-600 text-white py-4 px-8 rounded-lg hover:bg-blue-700 transition-colors font-semibold text-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        >
           {isSubmitting ? (
             <>
               <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
@@ -254,7 +226,7 @@ export default function LeadForm() {
             <>
               Recevoir mon pack
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L10.586 11.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414 0z" clipRule="evenodd" />
               </svg>
             </>
           )}

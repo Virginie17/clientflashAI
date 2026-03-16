@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { supabase } from '@/lib/supabase'
+import Logo from './Logo'
 
 export default function Hero() {
   const [formData, setFormData] = useState({
@@ -59,6 +60,11 @@ export default function Hero() {
   return (
     <section className="py-12 text-center bg-gray-50 px-4 lg:py-16">
       <div className="max-w-4xl mx-auto">
+        {/* Logo */}
+        <div className="mb-6 md:mb-8">
+          <Logo size="large" />
+        </div>
+        
         {/* Titre optimisé mobile */}
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6">
           <span className="block md:inline">Attirez plus de clients</span>

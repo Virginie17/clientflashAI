@@ -1,76 +1,151 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
+
+// Rate limiting simple en mémoire
+const rateLimitMap = new Map()
+const RATE_LIMIT = 5 // 5 requêtes par IP
+const RATE_WINDOW = 60 * 1000 // 1 minute en millisecondes
+
+function getRateLimitKey(ip: string): string {
+  return `leads:${ip}`
+}
+
+function checkRateLimit(ip: string): boolean {
+  const key = getRateLimitKey(ip)
+  const now = Date.now()
+  const requests = rateLimitMap.get(key) || []
+  
+  // Nettoyer les anciennes requêtes
+  const validRequests = requests.filter((timestamp: number) => now - timestamp < RATE_WINDOW)
+  
+  if (validRequests.length >= RATE_LIMIT) {
+    return false
+  }
+  
+  validRequests.push(now)
+  rateLimitMap.set(key, validRequests)
+  
+  // Nettoyer périodiquement la carte
+  if (rateLimitMap.size > 1000) {
+    rateLimitMap.clear()
+  }
+  
+  return true
+}
+
+function getClientIP(request: NextRequest): string {
+  // Essayer différentes sources d'IP
+  const forwarded = request.headers.get('x-forwarded-for')
+  const realIP = request.headers.get('x-real-ip')
+  const ip = forwarded?.split(',')[0] || realIP || 'unknown'
+  return ip
+}
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Supabase is configured
-    if (!supabase) {
+    // Rate limiting
+    const ip = getClientIP(request)
+    if (!checkRateLimit(ip)) {
       return NextResponse.json(
-        { error: 'Database not configured. Please check your environment variables.' },
-        { status: 500 }
+        { error: 'Trop de requêtes. Veuillez réessayer plus tard.' },
+        { status: 429 }
       )
     }
 
     const body = await request.json()
-    const { name, email, business_type, city, instagram_or_website } = body
+    const { name, email, business_type, city, instagram_or_website, phone } = body
 
-    // Validate required fields
-    if (!name || !email || !business_type || !city) {
+    // Validation des champs
+    if (!name || !email || !business_type) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Les champs nom, email et type d\'activité sont requis' },
         { status: 400 }
       )
     }
 
-    // Validate email format
+    // Validation email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: 'Email invalide' },
         { status: 400 }
       )
     }
 
-    // Insert lead into Supabase
+    // Validation nom (min 2 caractères)
+    if (name.trim().length < 2) {
+      return NextResponse.json(
+        { error: 'Le nom doit contenir au moins 2 caractères' },
+        { status: 400 }
+      )
+    }
+
+    // Créer le client Supabase
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+
+    // Insérer le client (nouveau modèle business)
     const { data, error } = await supabase
-      .from('leads')
+      .from('clients')
       .insert([
         {
-          name,
-          email,
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
           business_type,
-          city,
-          instagram_or_website: instagram_or_website || null,
+          city: city?.trim() || null,
+          instagram_or_website: instagram_or_website?.trim() || null,
+          phone: phone?.trim() || null,
+          status: 'prospect', // Statut initial
           created_at: new Date().toISOString()
         }
       ])
       .select()
 
     if (error) {
-      console.error('Supabase error:', error)
+      console.error('Erreur Supabase:', error)
+      
+      // Si l'email existe déjà, retourner une erreur spécifique
+      if (error.code === '23505') {
+        return NextResponse.json(
+          { error: 'Cet email est déjà enregistré' },
+          { status: 409 }
+        )
+      }
+      
       return NextResponse.json(
-        { error: 'Failed to save lead' },
+        { error: 'Erreur lors de l\'enregistrement' },
         { status: 500 }
       )
     }
 
-    // TODO: Send confirmation email to the client
-    // TODO: Send notification email to the business owner
-    // TODO: Add to email marketing list (if applicable)
+    // Aussi insérer dans la table leads pour compatibilité
+    await supabase
+      .from('leads')
+      .insert([
+        {
+          name: name.trim(),
+          email: email.trim().toLowerCase(),
+          business_type,
+          city: city?.trim() || null,
+          instagram_or_website: instagram_or_website?.trim() || null,
+          created_at: new Date().toISOString()
+        }
+      ])
 
-    return NextResponse.json(
-      { 
-        success: true, 
-        message: 'Lead saved successfully',
-        data: data[0]
-      },
-      { status: 200 }
-    )
+    console.log('Nouveau client enregistré:', data[0])
+
+    return NextResponse.json({ 
+      success: true, 
+      message: 'Client enregistré avec succès',
+      data: data[0] 
+    })
 
   } catch (error) {
-    console.error('API error:', error)
+    console.error('Erreur API:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Erreur serveur' },
       { status: 500 }
     )
   }

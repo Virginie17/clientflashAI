@@ -1,6 +1,6 @@
 export default function Features() {
   return (
-    <section className="py-20 max-w-6xl mx-auto px-6">
+    <section id="features" className="py-20 max-w-6xl mx-auto px-6">
       <h2 className="text-3xl font-bold text-center mb-12">
         Le Pack Visibilité IA
       </h2>

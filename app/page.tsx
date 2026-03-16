@@ -1,42 +1,33 @@
+import Header from "@/components/Header"
 import Hero from "@/components/Hero"
 import Features from "@/components/Features"
 import Example from "@/components/Example"
-import LeadFormFixed from "@/components/LeadFormFixed"
+import Testimonials from "@/components/Testimonials"
+import ClientLogos from "@/components/ClientLogos"
+import Demo from "@/components/Demo"
+import LeadForm from "@/components/LeadForm"
 import Pricing from "@/components/Pricing"
 import Process from "@/components/Process"
 import CTA from "@/components/CTA"
+import Footer from "@/components/Footer"
 
 export default function Home() {
   return (
-    <main className="bg-white text-gray-900">
-      {/* Optimisation mobile-first - Hero prend 70% de l'espace */}
-      <div className="lg:hidden">
+    <div className="min-h-screen bg-white text-gray-900">
+      <Header />
+      <main>
         <Hero />
-      </div>
-      
-      {/* Version desktop */}
-      <div className="hidden lg:block">
-        <Hero />
-      </div>
-
-      {/* Features et Example optimisés pour mobile */}
-      <div className="lg:hidden">
         <Features />
         <Example />
-      </div>
-      
-      {/* Version desktop */}
-      <div className="hidden lg:block">
-        <Features />
-        <Example />
-      </div>
-
-      {/* Formulaire de leads professionnel */}
-      <LeadFormFixed />
-
-      <Process />
-      <Pricing />
-      <CTA />
-    </main>
+        <Testimonials />
+        <ClientLogos />
+        <Demo />
+        <LeadForm />
+        <Process />
+        <Pricing />
+        <CTA />
+      </main>
+      <Footer />
+    </div>
   )
 }

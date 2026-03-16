@@ -13,13 +13,56 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'ClientFlash AI - Attirez Plus de Clients avec une Page Professionnelle en 72 Heures',
-  description: 'Arrêtez de lutter avec votre visibilité en ligne. Nous créons une page d\'atterrissage spectaculaire, un texte marketing convaincant et des publications sur les réseaux sociaux qui attirent vos clients idéaux. Livraison en 72 heures.',
-  keywords: 'page d\'atterrissage, texte marketing, publications réseaux sociaux, acquisition clients, marketing PME, marketing IA',
+  title: 'ClientFlash AI - Landing Page Professionnelle en 72h',
+  description: 'Transformez votre activité avec une page web professionnelle, textes marketing et posts Instagram. Livraison garantie en 72h. Coachs, esthéticiennes, thérapeutes : lancez-vous dès demain !',
+  keywords: 'landing page, page professionnelle, marketing digital, coach sportif, esthéticienne, thérapeute, acquisition clients, textes marketing, posts Instagram, web design',
+  authors: [{ name: 'ClientFlash AI' }],
+  creator: 'ClientFlash AI',
+  publisher: 'ClientFlash AI',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://clientflash-ai.vercel.app'),
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
-    title: 'ClientFlash AI - Pages Professionnelles en 72 Heures',
-    description: 'Obtenez une page d\'atterrissage professionnelle, un texte marketing et des publications sur les réseaux sociaux créés pour votre entreprise en seulement 72 heures.',
+    title: 'ClientFlash AI - Landing Page Professionnelle en 72h',
+    description: 'Obtenez une page web complète, textes marketing et posts Instagram créés par IA en seulement 72h. Service pour coachs, esthéticiennes, thérapeutes et professionnels.',
     type: 'website',
+    locale: 'fr_FR',
+    siteName: 'ClientFlash AI',
+    images: [
+      {
+        url: '/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'ClientFlash AI - Landing Page Professionnelle en 72h',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'ClientFlash AI - Landing Page en 72h',
+    description: 'Page web professionnelle + marketing + posts Instagram en 72h seulement',
+    images: ['/og-image.jpg'],
+    creator: '@clientflash_ai',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code',
   },
 };
 
@@ -29,7 +72,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
