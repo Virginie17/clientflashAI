@@ -1,14 +1,14 @@
 import Header from "@/components/Header"
-import Hero from "@/components/Hero"
+import NewHero from "@/components/NewHero"
+import SocialProof from "@/components/SocialProof"
 import Features from "@/components/Features"
-import Example from "@/components/Example"
-import Testimonials from "@/components/Testimonials"
-import ClientLogos from "@/components/ClientLogos"
-import Demo from "@/components/Demo"
-import LeadForm from "@/components/LeadForm"
-import Pricing from "@/components/Pricing"
+import BeforeAfter from "@/components/BeforeAfter"
+import Examples from "@/components/Examples"
+import NewTestimonials from "@/components/NewTestimonials"
 import Process from "@/components/Process"
-import CTA from "@/components/CTA"
+import Pricing from "@/components/Pricing"
+import FAQ from "@/components/FAQ"
+import FinalCTA from "@/components/FinalCTA"
 import Footer from "@/components/Footer"
 
 export default function Home() {
@@ -16,16 +16,17 @@ export default function Home() {
     <div className="min-h-screen bg-white text-gray-900">
       <Header />
       <main>
-        <Hero />
+        {/* Structure SaaS optimisée pour la conversion */}
+        <NewHero />
+        <SocialProof />
         <Features />
-        <Example />
-        <Testimonials />
-        <ClientLogos />
-        <Demo />
-        <LeadForm />
+        <BeforeAfter />
+        <Examples />
+        <NewTestimonials />
         <Process />
         <Pricing />
-        <CTA />
+        <FAQ />
+        <FinalCTA />
       </main>
       <Footer />
     </div>
