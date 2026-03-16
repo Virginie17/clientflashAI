@@ -1,0 +1,87 @@
+# ClientFlash AI - Fichiers à ignorer par Git
+
+# =================================
+# VARIABLES D'ENVIRONNEMENT (TRÈS IMPORTANT)
+# =================================
+# Protection des clés secrètes - NE JAMAIS COMMITTER
+.env
+.env.local
+.env.production
+.env.development
+
+# =================================
+# LOGS ET TEMP
+# =================================
+# Logs de l'application
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers temporaires
+.tmp
+temp
+.cache
+
+# =================================
+# BUILD ET DÉPENDANCES
+# =================================
+# Dossiers de build
+.next
+out/
+dist/
+build/
+
+# Fichiers de dépendances
+node_modules/
+.pnp
+.pnp.js
+
+# =================================
+# OUTILS ET ÉDITEURS
+# =================================
+# Configuration des éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =================================
+# SYSTÈME D'EXPLOITATION
+# =================================
+# Fichiers de cache
+.cache
+.parcel-cache
+
+# =================================
+# TESTS ET COVERAGE
+# =================================
+# Rapports de tests
+coverage/
+.nyc_output
+.coverage
+
+# =================================
+# MACOS
+# =================================
+# Fichiers système macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# =================================
+# WINDOWS
+# =================================
+# Fichiers système Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# =================================
+# BACKUPS
+# =================================
+# Fichiers de sauvegarde
+*.bak
+*.backup
+*.old
